@@ -1,6 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:whatsap_clone/models/usuario.dart';
+import 'package:whatsap_clone/screens/home_screen.dart';
 
-const CADASTRO_SCREEN = "cadastro_screen";
+const CADASTRO_SCREEN = "/cadastro_screen";
 
 class CadastroScreen extends StatefulWidget {
   CadastroScreen({Key key}) : super(key: key);
@@ -92,7 +95,7 @@ class _CadastroScreenState extends State<CadastroScreen> {
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20)),
                   onPressed: () {
-                    validarCampos();
+                    _validarCampos();
                   },
                   child: Text(
                     "Cadastrar",
@@ -105,8 +108,10 @@ class _CadastroScreenState extends State<CadastroScreen> {
                   padding: EdgeInsets.fromLTRB(32, 16, 32, 16),
                 ),
                 SizedBox(height: 7),
-                Text(_mensagemErro,
-                    style: TextStyle(color: Colors.red, fontSize: 20))
+                Center(
+                  child: Text(_mensagemErro,
+                      style: TextStyle(color: Colors.red, fontSize: 20)),
+                )
               ],
             ),
           ),
@@ -115,7 +120,7 @@ class _CadastroScreenState extends State<CadastroScreen> {
     );
   }
 
-  void validarCampos() {
+  void _validarCampos() {
     //recuperar dados dos campos
     String nome = _controllerNome.text;
     String email = _controllerEmail.text;
@@ -127,7 +132,15 @@ class _CadastroScreenState extends State<CadastroScreen> {
           setState(() {
             _mensagemErro = "";
           });
-          // executar metodo a
+          // executar metodo
+
+          Usuario usuario = Usuario();
+
+          usuario.nome = nome;
+          usuario.senha = senha;
+          usuario.email = email;
+
+          _cadastrarUsuario(usuario);
         } else {
           setState(() {
             _mensagemErro = "Preecnha a senha";
@@ -143,5 +156,23 @@ class _CadastroScreenState extends State<CadastroScreen> {
         _mensagemErro = "Preencha no nome";
       });
     }
+  }
+
+  _cadastrarUsuario(Usuario usuairo) {
+    FirebaseAuth auth = FirebaseAuth.instance;
+
+    auth
+        .createUserWithEmailAndPassword(
+      email: usuairo.email,
+      password: usuairo.senha,
+    )
+        .then((firebaseUser) {
+      Navigator.pushReplacementNamed(context, HOME_SCREEN);
+    }).catchError((onError) {
+      setState(() {
+        _mensagemErro =
+            "Erro ao cadastrar usuario verifique s campos e tente novamente";
+      });
+    });
   }
 }

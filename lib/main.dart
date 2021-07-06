@@ -25,7 +25,8 @@ class MyApp extends StatelessWidget {
       initialRoute: LOGIN_SCREEN,
       routes: {
         LOGIN_SCREEN: (_) => LoginScreen(),
-        CADASTRO_SCREEN: (_) => CadastroScreen()
+        CADASTRO_SCREEN: (_) => CadastroScreen(),
+        HOME_SCREEN: (_) => HomeScreen(),
       },
     );
   }

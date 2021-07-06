@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'cadastro_screen.dart';
 
-const LOGIN_SCREEN = "login_screen";
+const LOGIN_SCREEN = "/login_screen";
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({Key key}) : super(key: key);
