@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:whatsap_clone/screens/cadastro_screen.dart';
 import 'package:whatsap_clone/screens/home_screen.dart';
 import 'package:whatsap_clone/screens/login_screen.dart';
 
@@ -21,6 +22,11 @@ class MyApp extends StatelessWidget {
           0xff25d366,
         ),
       ),
+      initialRoute: LOGIN_SCREEN,
+      routes: {
+        LOGIN_SCREEN: (_) => LoginScreen(),
+        CADASTRO_SCREEN: (_) => CadastroScreen()
+      },
     );
   }
 }

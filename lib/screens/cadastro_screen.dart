@@ -1,32 +1,48 @@
 import 'package:flutter/material.dart';
 
-import 'cadastro_screen.dart';
+const CADASTRO_SCREEN = "cadastro_screen";
 
-const LOGIN_SCREEN = "login_screen";
-
-class LoginScreen extends StatelessWidget {
-  const LoginScreen({Key key}) : super(key: key);
+class CadastroScreen extends StatelessWidget {
+  const CadastroScreen({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+        title: Text("Criar Conta"),
+      ),
       body: Container(
         decoration: const BoxDecoration(color: Color(0xff075354)),
-        padding: const EdgeInsets.all(20),
+        padding: EdgeInsets.all(20),
         child: Center(
           child: SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Image.asset(
-                  "assets/logo.png",
+                  "assets/usuario.png",
                   width: 200,
                   height: 150,
                 ),
                 SizedBox(
                   height: 32,
                 ),
+                TextField(
+                  autofocus: true,
+                  keyboardType: TextInputType.emailAddress,
+                  style: TextStyle(fontSize: 20),
+                  decoration: InputDecoration(
+                    contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
+                    hintText: "Nome",
+                    filled: true,
+                    fillColor: Colors.white,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 10),
                 TextField(
                   autofocus: true,
                   keyboardType: TextInputType.emailAddress,
@@ -61,7 +77,7 @@ class LoginScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(20)),
                   onPressed: () {},
                   child: Text(
-                    "Entrar",
+                    "Cadastrar",
                     style: TextStyle(
                       fontSize: 20,
                       color: Colors.white,
@@ -70,15 +86,6 @@ class LoginScreen extends StatelessWidget {
                   color: Colors.green,
                   padding: EdgeInsets.fromLTRB(32, 16, 32, 16),
                 ),
-                FlatButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, CADASTRO_SCREEN);
-                  },
-                  child: Text(
-                    "Nao tem conta? Cadastre-se",
-                    style: TextStyle(color: Colors.white),
-                  ),
-                )
               ],
             ),
           ),
