@@ -78,7 +78,7 @@ class LoginScreen extends StatelessWidget {
                     "Nao tem conta? Cadastre-se",
                     style: TextStyle(color: Colors.white),
                   ),
-                )
+                ),
               ],
             ),
           ),
