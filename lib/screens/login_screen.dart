@@ -157,7 +157,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future _verificaUsuarioLogado() async {
     FirebaseAuth auth = FirebaseAuth.instance;
-
     FirebaseUser usuarioLogado = await auth.currentUser();
 
     if (usuarioLogado != null) {

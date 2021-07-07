@@ -5,10 +5,17 @@ class Usuario {
 
   Usuario();
 
+  Map<String, dynamic> toMap() {
+    return {
+      "nome": this.nome,
+      "email": this.email,
+    };
+  }
+
   get nome => this._nome;
 
   set nome(String nome) {
-    nome = nome;
+    this._nome = nome;
   }
 
   get email => this._email;

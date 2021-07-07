@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:whatsap_clone/models/usuario.dart';
@@ -167,6 +168,15 @@ class _CadastroScreenState extends State<CadastroScreen> {
       password: usuairo.senha,
     )
         .then((firebaseUser) {
+      //saldar dadosdo usuario
+
+      Firestore db = Firestore.instance;
+
+      db
+          .collection("usuarios")
+          .document(firebaseUser.uid)
+          .setData(usuairo.toMap());
+
       Navigator.pushReplacementNamed(context, HOME_SCREEN);
     }).catchError((onError) {
       setState(() {
