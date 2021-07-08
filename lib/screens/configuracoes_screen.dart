@@ -164,7 +164,7 @@ class _ConfiguracoesScreenState extends State<ConfiguracoesScreen> {
                 RaisedButton(
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20)),
-                  onPressed: () {},
+                  onPressed: _atualizarNomeFirestore,
                   child: Text(
                     "Salvar",
                     style: TextStyle(
@@ -190,9 +190,11 @@ class _ConfiguracoesScreenState extends State<ConfiguracoesScreen> {
     );
   }
 
-  _atualizarNomeFirestore(String url) {
+  _atualizarNomeFirestore() {
     Firestore db = Firestore.instance;
-    Map<String, dynamic> dadosAtualizar = {"nome": url};
+    Map<String, dynamic> dadosAtualizar = {
+      "nome": _controllerNome.text,
+    };
 
     db
         .collection("usuarios")
