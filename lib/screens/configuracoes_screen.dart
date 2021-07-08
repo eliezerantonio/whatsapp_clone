@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -73,6 +74,7 @@ class _ConfiguracoesScreenState extends State<ConfiguracoesScreen> {
 
   Future _recuperarUrlImagem(StorageTaskSnapshot snapshot) async {
     String url = await snapshot.ref.getDownloadURL();
+    _atualizarUrkImagemFirestore(url);
 
     setState(() {
       _urlImageRecuperada = url;
@@ -84,7 +86,19 @@ class _ConfiguracoesScreenState extends State<ConfiguracoesScreen> {
 
     FirebaseUser usuarioLogado = await auth.currentUser();
 
+    Firestore db = Firestore.instance;
     _idUsuarioLogado = usuarioLogado.uid;
+    DocumentSnapshot snapshot =
+        await db.collection("usuarios").document(_idUsuarioLogado).get();
+
+    Map<String, dynamic> dados = snapshot.data;
+    _controllerNome.text = dados["nome"];
+
+    if (dados["urlImagem"] != null) {
+      setState(() {
+        _urlImageRecuperada = dados["urlImagem"];
+      });
+    }
   }
 
   @override
@@ -167,5 +181,22 @@ class _ConfiguracoesScreenState extends State<ConfiguracoesScreen> {
         ),
       ),
     );
+  }
+
+  void _atualizarUrkImagemFirestore(String url) {
+    Firestore db = Firestore.instance;
+    db.collection("usuarios").document(_idUsuarioLogado).updateData(
+      {"urlImagem": url},
+    );
+  }
+
+  _atualizarNomeFirestore(String url) {
+    Firestore db = Firestore.instance;
+    Map<String, dynamic> dadosAtualizar = {"nome": url};
+
+    db
+        .collection("usuarios")
+        .document(_idUsuarioLogado)
+        .updateData(dadosAtualizar);
   }
 }
