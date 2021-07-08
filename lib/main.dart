@@ -1,8 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:flutter/material.dart';
-import 'package:whatsap_clone/screens/cadastro_screen.dart';
-import 'package:whatsap_clone/screens/home_screen.dart';
+
 import 'package:whatsap_clone/screens/login_screen.dart';
+import 'package:whatsap_clone/utils/route_generator.dart';
 
 void main() {
   runApp(MyApp());
@@ -15,7 +15,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-    
       theme: ThemeData(
         primaryColor: Color(0xff075e53),
         accentColor: Color(
@@ -23,11 +22,8 @@ class MyApp extends StatelessWidget {
         ),
       ),
       initialRoute: LOGIN_SCREEN,
-      routes: {
-        LOGIN_SCREEN: (_) => LoginScreen(),
-        CADASTRO_SCREEN: (_) => CadastroScreen(),
-        HOME_SCREEN: (_) => HomeScreen(),
-      },
+      onGenerateRoute: RouteGenerator.generateRoute,
+     
     );
   }
 }
