@@ -2,6 +2,7 @@ class Usuario {
   String _nome;
   String _email;
   String _senha;
+  String _urlImagem;
 
   Usuario();
 
@@ -17,6 +18,10 @@ class Usuario {
   set nome(String nome) {
     this._nome = nome;
   }
+
+  get urlImagem => this._urlImagem;
+
+  set urlImagem(String value) => this._urlImagem = value;
 
   get email => this._email;
 
