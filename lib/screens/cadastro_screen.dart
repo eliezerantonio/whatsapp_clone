@@ -177,7 +177,8 @@ class _CadastroScreenState extends State<CadastroScreen> {
           .document(firebaseUser.uid)
           .setData(usuairo.toMap());
 
-      Navigator.pushReplacementNamed(context, HOME_SCREEN);
+      ///remove todas rotas anteriores ate a rotal home
+      Navigator.pushNamedAndRemoveUntil(context, HOME_SCREEN, (_) => false);
     }).catchError((onError) {
       setState(() {
         _mensagemErro =

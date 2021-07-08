@@ -4,6 +4,8 @@ import 'package:whatsap_clone/screens/login_screen.dart';
 import 'package:whatsap_clone/widgets/aba_contacto.dart';
 import 'package:whatsap_clone/widgets/aba_conversa.dart';
 
+import 'configuracoes_screen.dart';
+
 const HOME_SCREEN = "/home_screen";
 
 class HomeScreen extends StatefulWidget {
@@ -30,6 +32,7 @@ class _HomeScreenState extends State<HomeScreen>
   _escolhaMenuItem(String itemEscolhido) {
     switch (itemEscolhido) {
       case "Configuracoes":
+        Navigator.pushNamed(context, CONFIGURACOES_SCREEN);
         break;
       case "Sair":
         _sair();
