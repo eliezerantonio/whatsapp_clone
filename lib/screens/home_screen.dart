@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:whatsap_clone/screens/login_screen.dart';
@@ -67,12 +69,14 @@ class _HomeScreenState extends State<HomeScreen>
     return Scaffold(
       appBar: AppBar(
         title: Text("WhatsapClone"),
+        elevation: Platform.isIOS ? 0 : 4,
         bottom: TabBar(
           indicatorWeight: 4,
           labelStyle: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.bold,
           ),
+          indicatorColor: Platform.isIOS ? Colors.grey[400] : Colors.white,
           controller: _tabController,
           tabs: [
             Tab(text: "Conversas"),

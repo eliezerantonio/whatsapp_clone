@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:whatsap_clone/models/conversa.dart';
@@ -201,15 +202,18 @@ class _MensagemScreenState extends State<MensagemScreen> {
               ),
             ),
           ),
-          FloatingActionButton(
-            backgroundColor: Color(0xff075E54),
-            child: Icon(
-              Icons.send,
-              color: Colors.white,
-            ),
-            mini: true,
-            onPressed: _enviarMensagem,
-          )
+          !Platform.isIOS
+              ? CupertinoButton(onPressed: _enviarMensagem,
+              child: Text("Enviar"),)
+              : FloatingActionButton(
+                  backgroundColor: Color(0xff075E54),
+                  child: Icon(
+                    Icons.send,
+                    color: Colors.white,
+                  ),
+                  mini: true,
+                  onPressed: _enviarMensagem,
+                )
         ],
       ),
     );
