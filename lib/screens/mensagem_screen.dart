@@ -53,8 +53,8 @@ class _MensagemScreenState extends State<MensagemScreen> {
 
       _salvarMensagem(_idUsuarioLogado, _idUsuarioDestinatario, mensagem);
       _salvarMensagem(_idUsuarioDestinatario, _idUsuarioLogado, mensagem);
-         //Salvar conversas
-    _salvarConversa(mensagem);
+      //Salvar conversas
+      _salvarConversa(mensagem);
     }
   }
 
@@ -135,8 +135,6 @@ class _MensagemScreenState extends State<MensagemScreen> {
 
     _salvarMensagem(_idUsuarioLogado, _idUsuarioDestinatario, mensagem);
     _salvarMensagem(_idUsuarioDestinatario, _idUsuarioLogado, mensagem);
-
- 
   }
 
   _salvarConversa(Mensagem msg) {
