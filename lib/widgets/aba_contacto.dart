@@ -1,52 +1,23 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:whatsap_clone/models/conversa.dart';
-import 'package:whatsap_clone/models/usuario.dart';
 
-class AbaContacto extends StatelessWidget {
+import 'package:whatsap_clone/models/usuario.dart';
+import 'package:whatsap_clone/screens/mensagem_screen.dart';
+
+class AbaContacto extends StatefulWidget {
   const AbaContacto({Key key}) : super(key: key);
 
   @override
+  _AbaContactoState createState() => _AbaContactoState();
+}
+
+class _AbaContactoState extends State<AbaContacto> {
+  String _idUsuarioLogado;
+  String _emailUsuarioLogado;
+
+  @override
   Widget build(BuildContext context) {
-    List<Conversa> listaConversas = [
-      Conversa(
-        "Eliezer Antonio",
-        "Nas calmas",
-        "https://firebasestorage.googleapis.com/v0/b/whatsapp-f57f1.appspot.com/o/perfil%2Fperfil6.jpeg?alt=media&token=2ff42684-f4bf-4547-8d15-0a45ff384cc0",
-      ),
-      Conversa(
-        "Jamilton Damasceno",
-        "Nas calmas e tu",
-        "https://firebasestorage.googleapis.com/v0/b/whatsapp-f57f1.appspot.com/o/perfil%2Fperfil5.jpg?alt=media&token=01ad2319-d9cc-4d1c-9d51-d431db2f018a",
-      ),
-      Conversa(
-        "Ana Clara",
-        "E ai galera",
-        "https://firebasestorage.googleapis.com/v0/b/whatsapp-f57f1.appspot.com/o/perfil%2Fperfil3.jpg?alt=media&token=3513206b-d36d-4515-8c7d-5192475bf021",
-      ),
-    ];
-
-    Future<List<Usuario>> _recuperarContactos() async {
-      Firestore db = Firestore.instance;
-
-      QuerySnapshot querySnapshot =
-          await db.collection("usuarios").getDocuments();
-
-      List<Usuario> listaUsuarios = List();
-
-      for (DocumentSnapshot item in querySnapshot.documents) {
-        var dados = item.data;
-        Usuario usuario = Usuario();
-
-        usuario.email = dados["email"];
-        usuario.nome = dados["nome"];
-        usuario.urlImagem = dados["urlImagem"];
-        listaUsuarios.add(usuario);
-      }
-
-      return listaUsuarios;
-    }
-
     return FutureBuilder<List<Usuario>>(
       future: _recuperarContactos(),
       builder: (context, snapshot) {
@@ -62,13 +33,17 @@ class AbaContacto extends StatelessWidget {
           case ConnectionState.none:
             break;
           case ConnectionState.done:
-            ListView.builder(
+            return ListView.builder(
               itemCount: snapshot.data.length,
               itemBuilder: (_, index) {
                 List<Usuario> listaItens = snapshot.data;
 
                 Usuario usuario = listaItens[index];
                 return ListTile(
+                  onTap: () {
+                    Navigator.pushNamed(context, MENSAGEM_SCREEN,
+                        arguments: usuario);
+                  },
                   contentPadding: EdgeInsets.fromLTRB(16, 8, 16, 8),
                   leading: CircleAvatar(
                       maxRadius: 30,
@@ -84,5 +59,45 @@ class AbaContacto extends StatelessWidget {
         }
       },
     );
+  }
+
+  Future<List<Usuario>> _recuperarContactos() async {
+    Firestore db = Firestore.instance;
+
+    QuerySnapshot querySnapshot =
+        await db.collection("usuarios").getDocuments();
+
+    List<Usuario> listaUsuarios = List();
+
+    for (DocumentSnapshot item in querySnapshot.documents) {
+      var dados = item.data;
+
+      if (dados["email"] == _emailUsuarioLogado) continue;
+
+      Usuario usuario = Usuario();
+
+      usuario.email = dados["email"];
+      usuario.nome = dados["nome"];
+      usuario.urlImagem = dados["urlImagem"];
+      listaUsuarios.add(usuario);
+    }
+
+    return listaUsuarios;
+  }
+
+  _recuperarDadosUsuario() async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+
+    FirebaseUser usuarioLogado = await auth.currentUser();
+
+    Firestore db = Firestore.instance;
+    _idUsuarioLogado = usuarioLogado.uid;
+    _emailUsuarioLogado = usuarioLogado.email;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _recuperarDadosUsuario();
   }
 }

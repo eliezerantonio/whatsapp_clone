@@ -3,9 +3,11 @@ import 'package:whatsap_clone/screens/cadastro_screen.dart';
 import 'package:whatsap_clone/screens/configuracoes_screen.dart';
 import 'package:whatsap_clone/screens/home_screen.dart';
 import 'package:whatsap_clone/screens/login_screen.dart';
+import 'package:whatsap_clone/screens/mensagem_screen.dart';
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
+    final args = settings.arguments;
     switch (settings.name) {
       case "/":
         return MaterialPageRoute(
@@ -35,6 +37,14 @@ class RouteGenerator {
       case CONFIGURACOES_SCREEN:
         return MaterialPageRoute(
           builder: (_) => ConfiguracoesScreen(),
+        );
+
+        break;
+      case MENSAGEM_SCREEN:
+        return MaterialPageRoute(
+          builder: (_) => MensagemScreen(
+            contato: args,
+          ),
         );
 
         break;
