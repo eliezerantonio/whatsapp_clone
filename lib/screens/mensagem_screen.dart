@@ -46,6 +46,7 @@ class _MensagemScreenState extends State<MensagemScreen> {
       mensagem.tipo = "texto";
 
       _salvarMensagem(_idUsuarioLogado, _idUsuarioDestinatario, mensagem);
+      _salvarMensagem(_idUsuarioDestinatario, _idUsuarioLogado, mensagem);
     }
   }
 
@@ -76,9 +77,11 @@ class _MensagemScreenState extends State<MensagemScreen> {
   _recuperarDadosUsuario() async {
     FirebaseAuth auth = FirebaseAuth.instance;
     FirebaseUser usuarioLogado = await auth.currentUser();
-    _idUsuarioLogado = usuarioLogado.uid;
+    setState(() {
+      _idUsuarioLogado = usuarioLogado.uid;
 
-    _idUsuarioDestinatario = widget.contato.idUsuario;
+      _idUsuarioDestinatario = widget.contato.idUsuario;
+    });
   }
 
   @override
@@ -147,7 +150,6 @@ class _MensagemScreenState extends State<MensagemScreen> {
             break;
           case ConnectionState.active:
           case ConnectionState.done:
-
             QuerySnapshot querySnapshot = snapshot.data;
 
             if (snapshot.hasError) {
@@ -159,9 +161,9 @@ class _MensagemScreenState extends State<MensagemScreen> {
                 child: ListView.builder(
                     itemCount: querySnapshot.documents.length,
                     itemBuilder: (context, indice) {
-
                       //recupera mensagem
-                      List<DocumentSnapshot> mensagens = querySnapshot.documents.toList();
+                      List<DocumentSnapshot> mensagens =
+                          querySnapshot.documents.toList();
                       DocumentSnapshot item = mensagens[indice];
 
                       double larguraContainer =
@@ -170,7 +172,7 @@ class _MensagemScreenState extends State<MensagemScreen> {
                       //Define cores e alinhamentos
                       Alignment alinhamento = Alignment.centerRight;
                       Color cor = Color(0xffd2ffa5);
-                      if ( _idUsuarioLogado != item["idUsuario"] ) {
+                      if (_idUsuarioLogado != item["idUsuario"]) {
                         alinhamento = Alignment.centerLeft;
                         cor = Colors.white;
                       }
