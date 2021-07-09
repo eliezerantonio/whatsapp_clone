@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -26,6 +27,8 @@ class _MensagemScreenState extends State<MensagemScreen> {
   Firestore db = Firestore.instance;
   bool _subindoImagem = false;
 
+  final _controller = StreamController<QuerySnapshot>.broadcast();
+  ScrollController _scrollController = ScrollController();
   List<String> listaMensagens = [
     "Olá meu amigo, tudo bem?",
     "Tudo ótimo!!! e contigo?",
@@ -168,6 +171,23 @@ class _MensagemScreenState extends State<MensagemScreen> {
 
       _idUsuarioDestinatario = widget.contato.idUsuario;
     });
+    _adicionarListenerMensagens();
+  }
+
+  Stream<QuerySnapshot> _adicionarListenerMensagens() {
+    final stream = db
+        .collection("mensagens")
+        .document(_idUsuarioLogado)
+        .collection(_idUsuarioDestinatario)
+        .snapshots();
+
+    stream.listen((event) {
+      _controller.add(event);
+
+      Timer(Duration(seconds: 1), () {
+        _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+      });
+    });
   }
 
   @override
@@ -202,9 +222,11 @@ class _MensagemScreenState extends State<MensagemScreen> {
               ),
             ),
           ),
-          !Platform.isIOS
-              ? CupertinoButton(onPressed: _enviarMensagem,
-              child: Text("Enviar"),)
+          Platform.isIOS
+              ? CupertinoButton(
+                  onPressed: _enviarMensagem,
+                  child: Text("Enviar"),
+                )
               : FloatingActionButton(
                   backgroundColor: Color(0xff075E54),
                   child: Icon(
@@ -219,11 +241,7 @@ class _MensagemScreenState extends State<MensagemScreen> {
     );
 
     var stream = StreamBuilder(
-      stream: db
-          .collection("mensagens")
-          .document(_idUsuarioLogado)
-          .collection(_idUsuarioDestinatario)
-          .snapshots(),
+      stream: _controller.stream,
       builder: (context, snapshot) {
         switch (snapshot.connectionState) {
           case ConnectionState.none:
@@ -248,6 +266,7 @@ class _MensagemScreenState extends State<MensagemScreen> {
             } else {
               return Expanded(
                 child: ListView.builder(
+                    controller: _scrollController,
                     itemCount: querySnapshot.documents.length,
                     itemBuilder: (context, indice) {
                       //recupera mensagem
