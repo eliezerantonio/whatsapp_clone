@@ -4,6 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:whatsap_clone/models/conversa.dart';
+import 'package:whatsap_clone/models/usuario.dart';
+import 'package:whatsap_clone/screens/mensagem_screen.dart';
 
 class AbaConversa extends StatefulWidget {
   const AbaConversa({Key key}) : super(key: key);
@@ -92,8 +94,17 @@ class _AbaConversaState extends State<AbaConversa> {
                   String tipo = item["tipoMensagem"];
                   String mensagem = item["mensagem"];
                   String nome = item["nome"];
+                  String idDestinatario = item["idDestinatario"];
+                  Usuario usuario = Usuario();
+                  usuario.nome = nome;
+                  usuario.urlImagem = ulrImagem;
+                  usuario.idUsuario = idDestinatario;
 
                   return ListTile(
+                    onTap: () {
+                      Navigator.pushNamed(context, MENSAGEM_SCREEN,
+                          arguments: usuario);
+                    },
                     contentPadding: EdgeInsets.fromLTRB(15, 8, 16, 8),
                     leading: CircleAvatar(
                       maxRadius: 30,
