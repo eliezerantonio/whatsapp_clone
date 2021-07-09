@@ -11,6 +11,7 @@ class Conversa {
   Conversa([this._nome, this._mensagem, this._caminhoFoto]);
 
   salvar() async {
+    print("salvando");
     Firestore db = Firestore.instance;
     await db
         .collection("conversas")
@@ -18,6 +19,8 @@ class Conversa {
         .collection("ultima_conversa")
         .document(this.idDestinatario)
         .setData(this.toMap());
+
+    print("Salvei");
   }
 
   Map<String, dynamic> toMap() {
@@ -37,21 +40,22 @@ class Conversa {
 
   get mensagem => this._mensagem;
 
-  set mensagem(value) => this._mensagem = value;
+  set mensagem(String value) => this._mensagem = value;
 
   get caminhoFoto => this._caminhoFoto;
 
-  set caminhoFoto(value) => this._caminhoFoto = value;
+  set caminhoFoto(String value) => this._caminhoFoto = value;
 
   get idDestinatario => this._idDestinatario;
 
-  set idDestinatario(value) => this._idDestinatario = value;
+  set idDestinatario(String value) => this._idDestinatario = value;
 
   get idRemetente => this._idRemetente;
 
-  set idRemetente(value) => this._idRemetente = value;
+  set idRemetente(String value) => this._idRemetente = value;
 
   get tipoMensagem => this._tipoMensagem;
 
-  set tipoMensagem(value) => this._tipoMensagem = value; //texto ou imagem
+  set tipoMensagem(String value) =>
+      this._tipoMensagem = value; //texto ou imagem
 }

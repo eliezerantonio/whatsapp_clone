@@ -53,6 +53,8 @@ class _MensagemScreenState extends State<MensagemScreen> {
 
       _salvarMensagem(_idUsuarioLogado, _idUsuarioDestinatario, mensagem);
       _salvarMensagem(_idUsuarioDestinatario, _idUsuarioLogado, mensagem);
+         //Salvar conversas
+    _salvarConversa(mensagem);
     }
   }
 
@@ -134,8 +136,7 @@ class _MensagemScreenState extends State<MensagemScreen> {
     _salvarMensagem(_idUsuarioLogado, _idUsuarioDestinatario, mensagem);
     _salvarMensagem(_idUsuarioDestinatario, _idUsuarioLogado, mensagem);
 
-    //Salvar conversas
-    _salvarConversa(mensagem);
+ 
   }
 
   _salvarConversa(Mensagem msg) {
@@ -143,7 +144,7 @@ class _MensagemScreenState extends State<MensagemScreen> {
     Conversa cRemetente = Conversa();
     cRemetente.idRemetente = _idUsuarioLogado;
     cRemetente.idDestinatario = _idUsuarioDestinatario;
-    cRemetente.mensagem = msg;
+    cRemetente.mensagem = msg.mensagem;
     cRemetente.nome = widget.contato.nome;
     cRemetente.caminhoFoto = widget.contato.urlImagem;
     cRemetente.tipoMensagem = msg.tipo;
@@ -153,7 +154,7 @@ class _MensagemScreenState extends State<MensagemScreen> {
     Conversa cDestinatario = Conversa();
     cDestinatario.idRemetente = _idUsuarioDestinatario;
     cDestinatario.idDestinatario = _idUsuarioLogado;
-    cDestinatario.mensagem = msg;
+    cDestinatario.mensagem = msg.mensagem;
     cDestinatario.nome = widget.contato.nome;
     cDestinatario.caminhoFoto = widget.contato.urlImagem;
     cDestinatario.tipoMensagem = msg.tipo;
