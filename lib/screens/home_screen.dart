@@ -23,9 +23,22 @@ class _HomeScreenState extends State<HomeScreen>
     "Configuracoes",
     "Sair",
   ];
+
+  Future _verificaUsuarioLogado() async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+
+    FirebaseUser usuarioLoagado = await auth.currentUser();
+
+    if (usuarioLoagado == null) {
+      Navigator.pushReplacementNamed(context, LOGIN_SCREEN);
+    }
+  }
+
   @override
   void initState() {
     super.initState();
+    _verificaUsuarioLogado();
+
     _tabController = TabController(length: 2, vsync: this);
   }
 

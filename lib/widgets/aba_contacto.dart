@@ -77,6 +77,7 @@ class _AbaContactoState extends State<AbaContacto> {
       Usuario usuario = Usuario();
 
       usuario.email = dados["email"];
+      usuario.idUsuario = item.documentID;
       usuario.nome = dados["nome"];
       usuario.urlImagem = dados["urlImagem"];
       listaUsuarios.add(usuario);

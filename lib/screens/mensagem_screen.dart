@@ -1,4 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:whatsap_clone/models/mensagem.dart';
 import 'package:whatsap_clone/models/usuario.dart';
 
 const MENSAGEM_SCREEN = "/mensagem_screen";
@@ -13,6 +16,8 @@ class MensagemScreen extends StatefulWidget {
 
 class _MensagemScreenState extends State<MensagemScreen> {
   final _controllerMensagem = TextEditingController();
+  String _idUsuarioDestinatario;
+  var _idUsuarioLogado;
   List<String> listaMensagens = [
     "Eliezer",
     "Tudo bem",
@@ -53,7 +58,7 @@ class _MensagemScreenState extends State<MensagemScreen> {
             ),
           ),
           FloatingActionButton(
-            onPressed: () {},
+            onPressed: enviarMensagem,
             mini: true,
             child: Icon(Icons.send, color: Colors.white),
             backgroundColor: Theme.of(context).primaryColor,
@@ -64,9 +69,10 @@ class _MensagemScreenState extends State<MensagemScreen> {
 
     var listView = Expanded(
       child: ListView.builder(
+        physics: BouncingScrollPhysics(),
         itemCount: listaMensagens.length,
         itemBuilder: (_, index) {
-          double larguraContainer = MediaQuery.of(context).size.width*0.8;
+          double larguraContainer = MediaQuery.of(context).size.width * 0.8;
           Alignment alinhamento = Alignment.centerRight;
           Color cor = Color(0xffd2ffa5);
           if (index % 2 == 0) {
@@ -130,4 +136,55 @@ class _MensagemScreenState extends State<MensagemScreen> {
   }
 
   void _enviarFoto() {}
+  _recuperarDadosUsuario() async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+
+    FirebaseUser usuarioLogado = await auth.currentUser();
+
+    Firestore db = Firestore.instance;
+    _idUsuarioLogado = usuarioLogado.uid;
+    _idUsuarioDestinatario = widget.contato.idUsuario;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _recuperarDadosUsuario();
+  }
+
+  void enviarMensagem() {
+    String textoMensagem = _controllerMensagem.text;
+    if (textoMensagem.isNotEmpty) {
+      Mensagem mensagem = Mensagem();
+      mensagem.idUsuario = _idUsuarioLogado;
+      mensagem.mensagem = textoMensagem;
+      mensagem.urlImagem = "";
+      mensagem.tipo = "texto";
+
+      _salvarMensagem(_idUsuarioLogado, _idUsuarioDestinatario, mensagem);
+    }
+  }
+
+  void _salvarMensagem(
+      String idRemetente, String _idDestinatario, Mensagem mensagem) async {
+    Firestore db = Firestore.instance;
+    await db
+        .collection("mensagens")
+        .document(idRemetente)
+        .collection(_idDestinatario)
+        .add(mensagem.toMap());
+
+    //limpar compo
+    _controllerMensagem.clear();
+    /**
+     * 
+     * 
+     * "Mensagens"
+     * + eliezer Antonio 
+     *  +professor
+     *    + identificadorFirebase
+     *        <Mensagem>
+     * 
+     */
+  }
 }
