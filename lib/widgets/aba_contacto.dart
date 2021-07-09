@@ -91,7 +91,6 @@ class _AbaContactoState extends State<AbaContacto> {
 
     FirebaseUser usuarioLogado = await auth.currentUser();
 
-    Firestore db = Firestore.instance;
     _idUsuarioLogado = usuarioLogado.uid;
     _emailUsuarioLogado = usuarioLogado.email;
   }
