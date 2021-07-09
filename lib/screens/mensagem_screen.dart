@@ -18,6 +18,7 @@ class _MensagemScreenState extends State<MensagemScreen> {
   final _controllerMensagem = TextEditingController();
   String _idUsuarioDestinatario;
   var _idUsuarioLogado;
+  Firestore db = Firestore.instance;
   List<String> listaMensagens = [
     "Eliezer",
     "Tudo bem",
@@ -67,39 +68,75 @@ class _MensagemScreenState extends State<MensagemScreen> {
       ),
     );
 
-    var listView = Expanded(
-      child: ListView.builder(
-        physics: BouncingScrollPhysics(),
-        itemCount: listaMensagens.length,
-        itemBuilder: (_, index) {
-          double larguraContainer = MediaQuery.of(context).size.width * 0.8;
-          Alignment alinhamento = Alignment.centerRight;
-          Color cor = Color(0xffd2ffa5);
-          if (index % 2 == 0) {
-            cor = Colors.white;
-            alinhamento = Alignment.centerLeft;
-          }
-          return Align(
-            alignment: alinhamento,
-            child: Padding(
-              padding: EdgeInsets.all(6),
-              child: Container(
-                width: larguraContainer,
-                padding: EdgeInsets.all(14),
-                decoration: BoxDecoration(
-                  color: cor,
-                  borderRadius: BorderRadius.circular(8),
+    var stream = StreamBuilder(
+      stream: db
+          .collection("mensagens")
+          .document(_idUsuarioLogado)
+          .collection(_idUsuarioDestinatario)
+          .snapshots(),
+      builder: (_, snapshot) {
+        switch (snapshot.connectionState) {
+          case ConnectionState.none:
+
+          case ConnectionState.waiting:
+            return Center(child: CircularProgressIndicator());
+            break;
+
+          case ConnectionState.active:
+
+          case ConnectionState.done:
+            QuerySnapshot querySnapshot = snapshot.data;
+            if (snapshot.hasError) {
+              return Expanded(
+                child: Text("Erro ao carregar dados"),
+              );
+            } else {
+              return Expanded(
+                child: ListView.builder(
+                  physics: BouncingScrollPhysics(),
+                  itemCount: querySnapshot.documents.length,
+                  itemBuilder: (_, index) {
+                    //recupera mensagem
+                    List<DocumentSnapshot> mensagens =
+                        querySnapshot.documents.toList();
+
+                    DocumentSnapshot item = mensagens[index];
+                    print(item);
+                    double larguraContainer =
+                        MediaQuery.of(context).size.width * 0.8;
+                    Alignment alinhamento = Alignment.centerRight;
+                    Color cor = Color(0xffd2ffa5);
+                    if (_idUsuarioLogado != item["idUsuario"]) {
+                      cor = Colors.white;
+                      alinhamento = Alignment.centerLeft;
+                    }
+                    return Align(
+                      alignment: alinhamento,
+                      child: Padding(
+                        padding: EdgeInsets.all(6),
+                        child: Container(
+                          width: larguraContainer,
+                          padding: EdgeInsets.all(14),
+                          decoration: BoxDecoration(
+                            color: cor,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Text(
+                            item["mensagem"],
+                            style: TextStyle(fontSize: 18),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
                 ),
-                child: Text(
-                  listaMensagens[index],
-                  style: TextStyle(fontSize: 18),
-                ),
-              ),
-            ),
-          );
-        },
-      ),
+              );
+            }
+            break;
+        }
+      },
     );
+   
     return Scaffold(
       appBar: AppBar(
         title: Row(
@@ -125,7 +162,7 @@ class _MensagemScreenState extends State<MensagemScreen> {
             padding: EdgeInsets.all(16),
             child: Column(
               children: [
-                listView,
+                stream,
                 caixaMensagem,
               ],
             ),
@@ -141,7 +178,6 @@ class _MensagemScreenState extends State<MensagemScreen> {
 
     FirebaseUser usuarioLogado = await auth.currentUser();
 
-    Firestore db = Firestore.instance;
     _idUsuarioLogado = usuarioLogado.uid;
     _idUsuarioDestinatario = widget.contato.idUsuario;
   }
