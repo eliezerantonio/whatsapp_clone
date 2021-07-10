@@ -179,6 +179,7 @@ class _MensagemScreenState extends State<MensagemScreen> {
         .collection("mensagens")
         .document(_idUsuarioLogado)
         .collection(_idUsuarioDestinatario)
+        .orderBy("data", descending: false)
         .snapshots();
 
     stream.listen((event) {
