@@ -1,7 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Mensagem {
   String _idUsuario;
   String _mensagem;
   String _urlImagem;
+  String _data;
 
   //define o tipo da mensagem que pode ser texto ou imagem
 
@@ -10,7 +13,8 @@ class Mensagem {
       "idUsuario": this.idUsuario,
       "mensagem": this.mensagem,
       "urlImagem": this.urlImagem,
-      "tipo": this.tipo
+      "tipo": this.tipo,
+      "data": Timestamp.now()
     };
   }
 
@@ -31,4 +35,7 @@ class Mensagem {
   get tipo => this._tipo;
 
   set tipo(value) => this._tipo = value;
+  String get data => this._data;
+
+  set data(String value) => this._data = value;
 }
